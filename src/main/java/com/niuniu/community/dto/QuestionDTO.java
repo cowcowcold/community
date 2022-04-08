@@ -1,10 +1,11 @@
-package com.niuniu.community.model;
+package com.niuniu.community.dto;
 
 
+import com.niuniu.community.model.User;
 import lombok.Data;
 
 @Data
-public class Question {
+public class QuestionDTO {
     private Integer id;
     private String title;
     private String description;
@@ -15,4 +16,5 @@ public class Question {
     private Integer commentCount;
     private Integer viewCount;
     private Integer likeCount;
+    private User user;
 }

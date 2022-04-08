@@ -24,6 +24,7 @@ public class PublishController {
 
     @Autowired
     private UserMapper userMapper;
+
     @GetMapping("/publish")
     public String publish(){
         return "publish";
@@ -32,7 +33,7 @@ public class PublishController {
     @PostMapping("/publish")
     public String doPubilsh(
             @RequestParam("title") String title,
-            @RequestParam("decription") String description,
+            @RequestParam("description") String description,
             @RequestParam("tag") String tag,
             HttpServletRequest request,
             Model model){
