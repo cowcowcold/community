@@ -1,6 +1,7 @@
 package com.niuniu.community.service;
 
 
+import com.niuniu.community.dto.PageDTO;
 import com.niuniu.community.dto.QuestionDTO;
 import com.niuniu.community.mapper.QuestionMapper;
 import com.niuniu.community.mapper.UserMapper;
@@ -21,9 +22,12 @@ public class QuestionService {
     @Autowired
     private UserMapper userMapper;
 
-    public List<QuestionDTO> list() {
-        List<Question> questions= questionMapper.list();
+    public PageDTO list(Integer page, Integer size) {
+
+        Integer offset=size*(page-1);
+        List<Question> questions= questionMapper.list(offset,size);
         List<QuestionDTO> questionDTOS =new ArrayList<QuestionDTO>();
+        PageDTO pageDTO =new PageDTO();
         for(Question question:questions){
             User user= userMapper.findById(question.getCreator());
             QuestionDTO questionDTO =new QuestionDTO();
@@ -31,6 +35,10 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOS.add(questionDTO);
         }
-        return questionDTOS;
+        pageDTO.setQuestions(questionDTOS);
+
+        Integer totalCount= questionMapper.count();
+        pageDTO.setPagination(totalCount,page,size);
+        return pageDTO ;
     }
 }
