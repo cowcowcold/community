@@ -1,10 +1,7 @@
 package com.niuniu.community.Controller;
 
 import com.niuniu.community.dto.PageDTO;
-import com.niuniu.community.dto.QuestionDTO;
-import com.niuniu.community.mapper.QuestionMapper;
 import com.niuniu.community.mapper.UserMapper;
-import com.niuniu.community.model.Question;
 import com.niuniu.community.model.User;
 import com.niuniu.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @Controller
 public class IndexController {
