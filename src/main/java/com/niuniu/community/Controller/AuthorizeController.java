@@ -6,6 +6,7 @@ import com.niuniu.community.dto.GithubUser;
 import com.niuniu.community.mapper.UserMapper;
 import com.niuniu.community.model.User;
 import com.niuniu.community.provider.GithubProvider;
+import com.niuniu.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -37,6 +38,9 @@ public class AuthorizeController {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code")String code,
                            @RequestParam(name = "state")String state,
@@ -59,12 +63,22 @@ public class AuthorizeController {
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtModified() );
             user.setAvatarUrl(githubUser.getAvatar_url());
-            userMapper.insert(user);
+            userService.createOrUpdate(user);
             response.addCookie(new Cookie("token",token));
             //登录成功，写user
         }else{
             //登录失败，重新登录
+            return "redirect:/";
         }
+        return "redirect:/";
+    }
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response){
+        request.getSession().removeAttribute("user");
+        Cookie cookie = new Cookie("token",null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
         return "redirect:/";
     }
 }
