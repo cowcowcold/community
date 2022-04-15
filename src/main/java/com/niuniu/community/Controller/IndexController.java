@@ -3,6 +3,7 @@ package com.niuniu.community.Controller;
 import com.niuniu.community.dto.PageDTO;
 import com.niuniu.community.mapper.UserMapper;
 import com.niuniu.community.model.User;
+import com.niuniu.community.model.UserExample;
 import com.niuniu.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 public class IndexController {
@@ -29,9 +31,12 @@ public class IndexController {
             for(Cookie cookie:cookies){
                 if(cookie.getName().equals("token")){
                     String token=cookie.getValue();
-                    User user = userMapper.findByToken(token);
-                    if(user!=null){
-                        request.getSession().setAttribute("user",user);
+                    UserExample userExample = new UserExample();
+                    userExample.createCriteria()
+                            .andTokenEqualTo(token);
+                    List<User> users = userMapper.selectByExample(userExample);
+                    if(users.size()!=0){
+                        request.getSession().setAttribute("user",users.get(0));
                     }
                     break;
                 }
