@@ -3,6 +3,9 @@ package com.niuniu.community.service;
 
 import com.niuniu.community.dto.PageDTO;
 import com.niuniu.community.dto.QuestionDTO;
+import com.niuniu.community.exception.CustomizeErrorCode;
+import com.niuniu.community.exception.CustomizeException;
+import com.niuniu.community.mapper.QuestionExtMapper;
 import com.niuniu.community.mapper.QuestionMapper;
 import com.niuniu.community.mapper.UserMapper;
 import com.niuniu.community.model.Question;
@@ -23,6 +26,8 @@ public class QuestionService {
     private QuestionMapper questionMapper;
     @Autowired(required = false)
     private UserMapper userMapper;
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
 
     public PageDTO list(Integer page, Integer size) {
 
@@ -72,6 +77,9 @@ public class QuestionService {
 
     public QuestionDTO getById(Integer id) {
         Question question = questionMapper.selectByPrimaryKey(id);
+        if(question==null){
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question,questionDTO);
         User user =userMapper.selectByPrimaryKey(question.getCreator());
@@ -94,7 +102,17 @@ public class QuestionService {
             QuestionExample questionExample =new QuestionExample();
             questionExample.createCriteria()
                     .andIdEqualTo(question.getId());
-            questionMapper.updateByExampleSelective(updateQuestion,questionExample);
+            int updated = questionMapper.updateByExampleSelective(updateQuestion,questionExample);
+            if(updated!=1){
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
         }
+    }
+
+    public void incView(Integer id) {
+        Question question = new Question();
+        question.setId(1);
+        question.setViewCount(1);
+        questionExtMapper.incView(question);
     }
 }
