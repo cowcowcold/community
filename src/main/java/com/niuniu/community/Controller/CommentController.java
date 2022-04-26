@@ -2,9 +2,11 @@ package com.niuniu.community.Controller;
 
 import com.niuniu.community.dto.CommentDTO;
 import com.niuniu.community.dto.ResultDTO;
+import com.niuniu.community.exception.CustomizeErrorCode;
 import com.niuniu.community.mapper.CommentMapper;
 import com.niuniu.community.model.Comment;
 import com.niuniu.community.model.User;
+import com.niuniu.community.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +19,7 @@ import java.util.Map;
 public class CommentController {
 
     @Autowired
-    private CommentMapper commentMapper;
+    private CommentService commentService;
 
     @ResponseBody
     @RequestMapping(value = "/comment",method = RequestMethod.POST)
@@ -25,7 +27,7 @@ public class CommentController {
                        HttpServletRequest request){
         User user = (User)request.getSession().getAttribute("user");
         if(user==null){
-            return ResultDTO.errorOf(2002,"未登录时不能进行评论，请先登录！");
+            return ResultDTO.errorOf(CustomizeErrorCode.NO_LOGIN);
         }
         Comment comment = new Comment();
         comment.setParentId(commentDTO.getParentId());
@@ -35,11 +37,8 @@ public class CommentController {
         comment.setGmtModified(System.currentTimeMillis());
         comment.setCommentator(user.getId());
         comment.setLikeCount(0L);
-        commentMapper.insertSelective(comment);
-        Map<Object,Object> ObjectHashMap = new HashMap<Object,Object>();
-        ObjectHashMap.put("message","成功  ");
-
-        return ObjectHashMap;
+        commentService.insert(comment);
+        return ResultDTO.okOf();
     }
 
 }
