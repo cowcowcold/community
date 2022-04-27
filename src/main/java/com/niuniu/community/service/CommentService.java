@@ -11,6 +11,7 @@ import com.niuniu.community.model.Comment;
 import com.niuniu.community.model.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CommentService {
@@ -18,13 +19,15 @@ public class CommentService {
     public CommentMapper commentMapper;
     @Autowired
     public QuestionMapper questionMapper;
+    @Autowired
     public QuestionExtMapper questionExtMapper;
 
+    @Transactional
     public void insert(Comment comment) {
         if(comment.getParentId()==null||comment.getParentId()==0){
             throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);
         }
-        if(comment.getType()==null|| CommentTypeEnum.isExist(comment.getType())){
+        if(comment.getType()==null|| !CommentTypeEnum.isExist(comment.getType())){
             throw new CustomizeException(CustomizeErrorCode.TYPE_PARAM_WRONG );
         }
         if(comment.getType() == CommentTypeEnum.COMMENT.getType()){
