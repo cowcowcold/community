@@ -62,9 +62,13 @@ body {
     margin-top: 5px;
     font-size: 15px;
     cursor: pointer;
-
 }
 
+
+.menu .active {
+   color: #2b669a;
+
+}
 .menu .icon:hover {
     color: #269abc;
 }
@@ -74,10 +78,31 @@ body {
     padding-bottom: 5px;
     margin-bottom: 15px;
 }
-.comment-content{
+
+.comment-content {
     color: #262626;
     /*background-color: #269abc;*/
 }
-.question-title{
+
+.question-title {
     margin-top: 30px;
+}
+
+.sub-comments{
+    border-radius: 5px;
+    margin-top: 10px;
+    border: 1px solid #eee;
+    padding-top: 15px;
+    margin-bottom: 15px;
+}
+.sub-comments .btn{
+    margin: 10px 0;
+}
+
+.menu .comment-icon{
+    font-size: 15px;
+    cursor: pointer;
+}
+.menu .comment-icon:hover {
+    color: #269abc;
 }

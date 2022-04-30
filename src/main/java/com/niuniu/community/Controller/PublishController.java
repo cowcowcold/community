@@ -2,7 +2,6 @@ package com.niuniu.community.Controller;
 
 
 import com.niuniu.community.dto.QuestionDTO;
-import com.niuniu.community.mapper.QuestionMapper;
 import com.niuniu.community.model.Question;
 import com.niuniu.community.model.User;
 import com.niuniu.community.service.QuestionService;
